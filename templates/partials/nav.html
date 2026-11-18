@@ -1,0 +1,43 @@
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item has-text-weight-bold is-size-4" href="/">
+      🎵 {{ ShareMusic }}
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/">Inicio</a>
+      <a class="navbar-item" href="/artists">Artistas</a>
+      <a class="navbar-item" href="/albums">Álbumes</a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">Crear</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/new_artist">Nuevo Artista</a>
+          <a class="navbar-item" href="/new_album">Nuevo Álbum</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" href="/new_album">
+            <strong>+ Subir Álbum</strong>
+          </a>
+          <a class="button is-light" href="/docs">
+            API Docs
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

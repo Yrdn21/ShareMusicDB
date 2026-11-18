@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="level">
+  <div class="level-left">
+    <h1 class="title">Artistas Registrados</h1>
+  </div>
+  <div class="level-right">
+    <a href="/new_artist" class="button is-primary">+ Nuevo Artista</a>
+  </div>
+</div>
+<p class="subtitle is-6">Los artistas que tenemos en la DB son: {{ artists|length }}</p>
+<hr>
+
+<div class="columns is-multiline">
+  {% for artist in artists %}
+  <div class="column is-3">
+    <div class="card">
+      <div class="card-image">
+        <figure class="image is-1by1">
+          <img src="{{ artist.image_url or 'https://bulma.io/assets/images/placeholders/480x480.png' }}" alt="{{ artist.name }}" style="object-fit: cover;">
+        </figure>
+      </div>
+      <div class="card-content">
+        <p class="title is-5">{{ artist.name }}</p>
+        <p class="subtitle is-6">País: {{ artist.country }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

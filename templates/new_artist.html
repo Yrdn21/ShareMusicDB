@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">Nuevo Artista</h1>
+
+<form method="post" action="/artist/" enctype="multipart/form-data">
+  <div class="field">
+    <label class="label">Artist Name</label>
+    <div class="control">
+      <input name="name" class="input" type="text" placeholder="Artist name here" required>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Country</label>
+    <div class="control has-icons-left">
+      <input class="input" type="text" placeholder="Country" name="country" value="Desconocido">
+      <span class="icon is-small is-left">
+        <i class="fas fa-globe"></i>
+      </span>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Artist Photo</label>
+    <div class="file is-boxed">
+      <label class="file-label">
+        <input class="file-input" type="file" name="image" />
+        <span class="file-cta">
+          <span class="file-icon">
+            <i class="fas fa-upload"></i>
+          </span>
+          <span class="file-label"> Choose a file… </span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <div class="field is-grouped">
+    <div class="control">
+      <button class="button is-link" type="submit">Save Artist</button>
+    </div>
+    <div class="control">
+      <a class="button is-link is-light" href="/artists">Cancel</a>
+    </div>
+  </div>
+</form>
+{% endblock %}

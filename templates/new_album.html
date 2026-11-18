@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">Nuevo Álbum</h1>
+
+<form method="post" action="/albums/" enctype="multipart/form-data">
+  <div class="field">
+    <label class="label">Album Title</label>
+    <div class="control">
+      <input name="title" class="input" type="text" placeholder="Album title here" required>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Artist</label>
+    <div class="control">
+      <div class="select">
+        <select name="artist_id" required>
+          <option value="" disabled selected>Select an artist</option>
+          {% for artist in artists %}
+          <option value="{{ artist.artist_id }}">{{ artist.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Genre</label>
+    <div class="control">
+      <div class="select">
+        <select name="genre" required>
+          <option value="" disabled selected>Select a genre</option>
+          {% for genre in genres %}
+          <option value="{{ genre }}">{{ genre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Release Year</label>
+    <div class="control">
+      <input name="release_year" class="input" type="number" placeholder="2024" required>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Edition</label>
+    <div class="control">
+      <div class="select">
+        <select name="edition">
+          {% for edition in editions %}
+          <option value="{{ edition }}">{{ edition }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="label">Album Cover</label>
+    <div class="file is-boxed">
+      <label class="file-label">
+        <input class="file-input" type="file" name="cover" />
+        <span class="file-cta">
+          <span class="file-icon">
+            <i class="fas fa-upload"></i>
+          </span>
+          <span class="file-label"> Choose a cover… </span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <div class="field is-grouped">
+    <div class="control">
+      <button class="button is-link" type="submit">Save Album</button>
+    </div>
+    <div class="control">
+      <a class="button is-link is-light" href="/albums">Cancel</a>
+    </div>
+  </div>
+</form>
+{% endblock %}
