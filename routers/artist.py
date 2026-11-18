@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from models.artist import ArtistID, ArtistBase
 from data.db import artist_operations_db as ops
-
+from data.image_storage import save_image
 
 
 router = APIRouter(prefix="/artist", tags=["Artist"])

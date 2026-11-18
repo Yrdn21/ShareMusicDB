@@ -9,6 +9,7 @@ if TYPE_CHECKING:
 class ArtistBase(SQLModel):
     name: str
     country: str = "Desconocido"
+    image_url: Optional[str] = None
 
 
 class ArtistID(ArtistBase, table=True):
