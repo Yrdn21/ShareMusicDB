@@ -1,13 +1,33 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status, HTTPException, UploadFile, File, Form
 from models.album import AlbumBase, AlbumRead, AlbumEditionUpdate
 from data.db import operations_db
+from data.image_storage import save_image
+from enums.genre import Genre
+from enums.editions import Edition
+from typing import Optional
 
 
 router = APIRouter(prefix="/albums", tags=["Albums"])
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=AlbumRead, response_description="Album created successfully")
-def create_album(new_album: AlbumBase):
+def create_album(
+    title: str = Form(...),
+    artist_id: int = Form(...),
+    genre: Genre = Form(...),
+    release_year: int = Form(...),
+    edition: Edition = Form(Edition.STANDARD),
+    cover: Optional[UploadFile] = File(None)
+):
+    cover_url = save_image(cover, folder="albums") if cover else None
+    new_album = AlbumBase(
+        title=title,
+        artist_id=artist_id,
+        genre=genre,
+        release_year=release_year,
+        edition=edition,
+        image_url=cover_url
+    )
     created = operations_db.create_album_db(new_album)
     if not created:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artist ID not found")
