@@ -17,6 +17,7 @@ def show_all_artist_db():
         return session.exec(select(ArtistID)).all()
 
 
+
 def show_one_artist_db(artist_id: int):
     with Session(engine) as session:
         return session.get(ArtistID, artist_id)
