@@ -20,7 +20,7 @@ app = FastAPI(lifespan=lifespan, title="ShareMusic")
 
 app.mount(IMAGES_URL, StaticFiles(directory=IMAGES_DIR), name="images")
 
-# Si vas a usar una carpeta static (CSS/JS/assets), asegúrate de crearla antes de montar:
+
 STATIC_DIR = BASE_DIR / "static"
 STATIC_DIR.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
