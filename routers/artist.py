@@ -3,19 +3,22 @@ from typing import Optional
 from models.artist import ArtistID, ArtistBase
 from data.db import artist_operations_db as ops
 from data.image_storage import save_image, delete_image
+from fastapi.responses import RedirectResponse
 
 
 router = APIRouter(prefix="/artist", tags=["Artist"])
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=ArtistID, response_description="The artist was created")
+@router.post("/", status_code=status.HTTP_303_SEE_OTHER, response_class=RedirectResponse)
 def create_artist(
     name: str = Form(...),
     country: str = Form("Desconocido"),
-    image: Optional[UploadFile] = File(None)):
-    image_url = save_image(image, folder="artists") if image else None
+    image: Optional[UploadFile] = File(None)
+):
+    image_url = save_image(image, folder="artists") if (image and image.filename) else None
     artist_data = ArtistBase(name=name, country=country, image_url=image_url)
-    return ops.create_artist_db(artist_data)
+    ops.create_artist_db(artist_data)
+    return RedirectResponse(url="/artists", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.get("/show", status_code=status.HTTP_200_OK, response_model=list[ArtistID], response_description="Showing all artists")

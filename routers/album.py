@@ -1,4 +1,5 @@
 from fastapi import APIRouter, status, HTTPException, UploadFile, File, Form
+from fastapi.responses import RedirectResponse
 from models.album import AlbumBase, AlbumRead, AlbumEditionUpdate
 from data.db import operations_db
 from data.image_storage import save_image
@@ -10,7 +11,7 @@ from typing import Optional
 router = APIRouter(prefix="/albums", tags=["Albums"])
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=AlbumRead, response_description="Album created successfully")
+@router.post("/", status_code=status.HTTP_303_SEE_OTHER, response_class=RedirectResponse)
 def create_album(
     title: str = Form(...),
     artist_id: int = Form(...),
@@ -19,7 +20,7 @@ def create_album(
     edition: Edition = Form(Edition.STANDARD),
     cover: Optional[UploadFile] = File(None)
 ):
-    cover_url = save_image(cover, folder="albums") if cover else None
+    cover_url = save_image(cover, folder="albums") if (cover and cover.filename) else None
     new_album = AlbumBase(
         title=title,
         artist_id=artist_id,
@@ -31,7 +32,7 @@ def create_album(
     created = operations_db.create_album_db(new_album)
     if not created:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artist ID not found")
-    return created
+    return RedirectResponse(url="/albums", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.get("/show", status_code=status.HTTP_200_OK, response_model=list[AlbumRead], response_description="Showing all albums")
