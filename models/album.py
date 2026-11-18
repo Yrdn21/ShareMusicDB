@@ -19,6 +19,7 @@ class AlbumBase(SQLModel):
     release_year: int
     edition: Edition = Edition.STANDARD
     status: ActiveStatus = ActiveStatus.ACTIVE
+    image_url: Optional[str] = None
 
 
 class AlbumID(AlbumBase, table=True):

@@ -36,6 +36,8 @@ def update_artist_db(artist_id: int, update_artist: ArtistBase):
             return None
         artist_db.name = update_artist.name
         artist_db.country = update_artist.country
+        if update_artist.image_url is not None:
+            artist_db.image_url = update_artist.image_url
         session.add(artist_db)
         session.commit()
         session.refresh(artist_db)
