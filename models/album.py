@@ -1,7 +1,7 @@
 from typing import List, Optional, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 from enums.genre import Genre
-from enums.StockStatus import ActiveStatus
+from enums.StockStatus import StockStatus
 from enums.editions import Edition
 from models.artist import ArtistBase
 from models.songs import SongBase
@@ -17,8 +17,9 @@ class AlbumBase(SQLModel):
     artist_id: int
     genre: Genre
     release_year: int
+    price: float = Field(gt=0)
     edition: Edition = Edition.STANDARD
-    status: ActiveStatus = ActiveStatus.ACTIVE
+    status: StockStatus = StockStatus.AVAILABLE
     image_url: Optional[str] = None
 
 
