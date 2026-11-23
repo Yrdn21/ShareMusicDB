@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
-from enums.ActiveStatus import ActiveStatus
+from enums.StockStatus import ActiveStatus
 from models.album import AlbumID, AlbumBase, AlbumEditionUpdate
 from models.artist import ArtistID
 from .album import engine

@@ -1,7 +1,7 @@
 from typing import List, Optional, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
 from enums.genre import Genre
-from enums.ActiveStatus import ActiveStatus
+from enums.StockStatus import ActiveStatus
 from enums.editions import Edition
 from models.artist import ArtistBase
 from models.songs import SongBase
