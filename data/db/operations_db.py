@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
-from enums.StockStatus import ActiveStatus
+
+from enums.StockStatus import StockStatus
 from models.album import AlbumID, AlbumBase, AlbumEditionUpdate
 from models.artist import ArtistID
 from .album import engine
@@ -26,7 +27,7 @@ def show_all_albums_db():
     with Session(engine) as session:
         statement = (
             select(AlbumID)
-            .where(AlbumID.status == ActiveStatus.ACTIVE)
+            .where(AlbumID.status == StockStatus.AVAILABLE)
             .options(selectinload(AlbumID.artist), selectinload(AlbumID.songs))
         )
         return session.exec(statement).all()
@@ -36,7 +37,7 @@ def show_all_deleted_albums_db():
     with Session(engine) as session:
         statement = (
             select(AlbumID)
-            .where(AlbumID.status == ActiveStatus.INACTIVE)
+            .where(AlbumID.status == StockStatus.AVAILABLE)
             .options(selectinload(AlbumID.artist), selectinload(AlbumID.songs))
         )
         return session.exec(statement).all()
