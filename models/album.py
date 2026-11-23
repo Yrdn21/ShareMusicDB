@@ -37,7 +37,7 @@ class AlbumRead(AlbumBase):
     songs: List[SongBase] = []
 
 class AlbumStatusUpdate(SQLModel):
-    status: ActiveStatus
+    StockStatus: StockStatus
 
 
 class AlbumEditionUpdate(SQLModel):
