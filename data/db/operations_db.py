@@ -1,10 +1,14 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, SQLModel
 from sqlalchemy.orm import selectinload
 
 from enums.StockStatus import StockStatus
 from models.album import AlbumID, AlbumBase, AlbumEditionUpdate
 from models.artist import ArtistID
 from .album import engine
+
+
+class OutOfStockError(Exception):
+    pass
 
 
 def create_album_db(new_album: AlbumBase):
@@ -21,6 +25,25 @@ def create_album_db(new_album: AlbumBase):
         _ = album_db.artist
         _ = album_db.songs
         return album_db
+
+
+
+def buy_album_db(album_id: int):
+    with Session(engine) as session:
+        statement = (select(AlbumID).where(AlbumID.album_id == album_id).options(selectinload(AlbumID.artist)), selectinload(AlbumID.songs))
+        album_db = session.exec(statement).first()
+        if not album_db:
+            return None
+
+        if album_db.status == StockStatus.OUT_OF_STOCK:
+            raise OutOfStockError("El album no tiene stock disponible")
+
+        album_db.status = StockStatus.OUT_OF_STOCK
+        session.add(album_db)
+        session.commit()
+        session.refresh(album_db)
+        return album_db
+
 
 
 def show_all_albums_db():
