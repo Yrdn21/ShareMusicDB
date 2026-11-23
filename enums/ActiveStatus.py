@@ -1,5 +1,5 @@
 from enum import Enum, auto
 
 class ActiveStatus(str, Enum):
-    ACTIVE = "Active"
-    INACTIVE = "Inactive"
+    AVAILABLE = "Stock Disponible"
+    OUT_OF_STOCK = "Sin stock"
