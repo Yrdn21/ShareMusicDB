@@ -95,7 +95,7 @@ def delete_album_db(album_id: int):
         if not album_db:
             return None
 
-        album_db.status = ActiveStatus.INACTIVE
+        album_db.status = StockStatus.AVAILABLE
         session.add(album_db)
         session.commit()
         session.refresh(album_db)
