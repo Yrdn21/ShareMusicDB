@@ -37,7 +37,7 @@ def show_all_deleted_albums_db():
     with Session(engine) as session:
         statement = (
             select(AlbumID)
-            .where(AlbumID.status == StockStatus.AVAILABLE)
+            .where(AlbumID.status == StockStatus.OUT_OF_STOCK)
             .options(selectinload(AlbumID.artist), selectinload(AlbumID.songs))
         )
         return session.exec(statement).all()
