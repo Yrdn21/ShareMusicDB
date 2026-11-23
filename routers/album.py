@@ -6,6 +6,7 @@ from data.image_storage import save_image
 from enums.genre import Genre
 from enums.editions import Edition
 from typing import Optional
+from data.db.operations_db import OutOfStockError
 
 
 router = APIRouter(prefix="/albums", tags=["Albums"])
@@ -33,6 +34,21 @@ def create_album(
     if not created:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Artist ID not found")
     return RedirectResponse(url="/albums", status_code=status.HTTP_303_SEE_OTHER)
+
+
+@router.post("/{album_id}/buy", status_code=status.HTTP_200_OK, response_model=AlbumRead, response_description="Album purchased and status updated to out of stock",
+)
+def buy_album(album_id: int):
+    try:
+        album = operations_db.buy_album_db(album_id)
+    except OutOfStockError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+
+    if not album:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No album found")
+
+    return album
+
 
 
 @router.get("/show", status_code=status.HTTP_200_OK, response_model=list[AlbumRead], response_description="Showing all albums")
