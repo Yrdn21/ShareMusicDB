@@ -24,8 +24,31 @@
       <div class="card-content">
         <p class="title is-5">{{ album.title }}</p>
         <p class="subtitle is-6">{{ album.artist.name if album.artist else 'Sin artista' }} ({{ album.release_year }})</p>
-        <span class="tag is-info">{{ album.genre.value }}</span>
-        <span class="tag is-dark">{{ album.edition.value }}</span>
+        <p class="has-text-weight-bold is size-5 mb-2">{{ album.price }}</p>
+
+        <div class="tags mb-3">
+          <span class="tag is-info is-light">{{ album.genre.value if album.genre.value is defined else album.genre }}</span>
+          <span class="tag is-dark">{{ album.edition.value if album.edition.value is defined else album.edition }}</span>
+          {% set status_val = album.status.value if album.status.value is defined else album.status %}
+          {% if status_val == "Stock Disponible" %}
+            <span class="tag is-success">{{ status_val }}</span>
+          {% else %}
+            <span class="tag is-danger">{{ status_val }}</span>
+          {% endif %}
+        </div>
+
+        {% if status_val == "Stock Disponible" %}
+          <form method="post" action="/albums/{{ album.album_id }}/buy">
+            <button type="submit" class="button is-primary is-fullwidth">
+              <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+              <span>Comprar</span>
+            </button>
+          </form>
+        {% else %}
+          <button type="button" class="button is-static is-fullwidth" disabled>
+            Agotado
+          </button>
+        {% endif %}
       </div>
     </div>
   </div>
