@@ -23,7 +23,12 @@ async def new_artist_form(request: Request):
 @router.get("/albums")
 async def list_albums(request: Request):
     albums = operations_db.show_all_albums_db()
-    return templates.TemplateResponse(request, "albums.html", {"title": "Álbumes", "albums": albums})
+    return templates.TemplateResponse(request, "albums.html", {"title": "Albumes", "albums": albums})
+
+@router.get("/history")
+async def album_history(request: Request):
+    deleted_albums = operations_db.show_all_deleted_albums_db()
+    return templates.TemplateResponse(request, "history.html", {"title": "Albumes sin stock", "albums": deleted_albums})
 
 @router.get("/new_album")
 async def new_album_form(request: Request):
