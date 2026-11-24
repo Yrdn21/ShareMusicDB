@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="level">
+    <div class="level-left">
+        <h1 class="title">Canciones registradas</h1>
+    </div>
+    <div class="level-right">
+        <a href="/new_song" class="button is-primary">+ Nueva Cancion</a>
+    </div>
+</div>
+<p class="subtitle is-6"> Las canciones que tenemos en la base de datos son: {{ songs|length  }}</p>
+<hr>
+{% if songs %}
+<div class="box">
+    <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Cancion</th>
+                <th>Album</th>
+                <th>Artista</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for song in songs %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td><strong>{{ song.name }}</strong></td>
+            <td>{{ song.album.title if song.album else "Sin album" }}</td>
+            <td>{{ song.album.artist.name if song.album and song.album.artist else "Desconocido" }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="notification is-light">
+    Aun no hay canciones registradas. <a href="/new_song"> Agrega la primera aqui</a>
+</div>
+{% endif %}
+{% endblock %}
