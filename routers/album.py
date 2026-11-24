@@ -19,6 +19,7 @@ def create_album(
     genre: Genre = Form(...),
     release_year: int = Form(...),
     price: float = Form(...),
+    stock: int = Form(...),
     edition: Edition = Form(Edition.STANDARD),
     cover: Optional[UploadFile] = File(None)
 ):
@@ -29,6 +30,7 @@ def create_album(
         genre=genre,
         release_year=release_year,
         price=price,
+        stock=stock,
         edition=edition,
         image_url=cover_url
     )
