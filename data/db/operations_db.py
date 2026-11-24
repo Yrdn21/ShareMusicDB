@@ -30,7 +30,7 @@ def create_album_db(new_album: AlbumBase):
 
 def buy_album_db(album_id: int):
     with Session(engine) as session:
-        statement = (select(AlbumID).where(AlbumID.album_id == album_id).options(selectinload(AlbumID.artist)), selectinload(AlbumID.songs))
+        statement = (select(AlbumID).where(AlbumID.album_id == album_id).options(selectinload(AlbumID.artist), selectinload(AlbumID.songs)))
         album_db = session.exec(statement).first()
         if not album_db:
             return None
