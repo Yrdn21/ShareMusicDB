@@ -18,6 +18,7 @@ def create_album_db(new_album: AlbumBase):
             return None
 
         album_db = AlbumID.model_validate(new_album)
+        album_db.status = StockStatus.AVAILABLE if album_db.stock > 0 else StockStatus.OUT_OF_STOCK
         session.add(album_db)
         session.commit()
         session.refresh(album_db)
@@ -35,13 +36,16 @@ def buy_album_db(album_id: int):
         if not album_db:
             return None
 
-        if album_db.status == StockStatus.OUT_OF_STOCK:
+        if album_db.status == StockStatus.OUT_OF_STOCK or album_db.stock <= 0:
             raise OutOfStockError("El album no tiene stock disponible")
 
-        album_db.status = StockStatus.OUT_OF_STOCK
+        album_db.stock -= 1
         session.add(album_db)
         session.commit()
         session.refresh(album_db)
+
+        if album_db.stock ==0:
+            return delete_album_db(album_id)
         return album_db
 
 
@@ -118,7 +122,9 @@ def delete_album_db(album_id: int):
         if not album_db:
             return None
 
-        album_db.status = StockStatus.AVAILABLE
+        album_db.stock = 0
+        album_db.status = StockStatus.OUT_OF_STOCK
+
         session.add(album_db)
         session.commit()
         session.refresh(album_db)
