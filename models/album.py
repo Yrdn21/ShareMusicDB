@@ -18,6 +18,7 @@ class AlbumBase(SQLModel):
     genre: Genre
     release_year: int
     price: float = Field(gt=0)
+    stock: int = Field(default=1, gt=0)
     edition: Edition = Edition.STANDARD
     status: StockStatus = StockStatus.AVAILABLE
     image_url: Optional[str] = None
