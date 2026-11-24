@@ -33,7 +33,8 @@ def update_song_db(song_id: int, updated_song: SongBase):
         song_db = session.get(SongID, song_id)
         if not song_db:
             return None
-        song_db.nombre = updated_song.name
+        song_db.name = updated_song.name
+        song_db.album_id = updated_song.album_id
         session.add(song_db)
         session.commit()
         session.refresh(song_db)
