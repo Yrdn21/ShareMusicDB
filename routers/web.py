@@ -39,14 +39,12 @@ async def new_album_form(request: Request):
         }
     )
 
-@router.get("/songs")
-async def list_songs(request: Request):
-    songs = songs_operations_db.show_all_songs()
-    return templates.TemplateResponse(request, "songs.html", {"title": "Songs", "songs": songs})
-
-
-
-@router.post("/new_song")
+@router.post("/songs")
 async def new_song_form(request: Request):
     albums = operations_db.show_all_albums_db()
     return templates.TemplateResponse(request, "new_song.html", {"title": "Nuevo Song", "albums": albums})
+
+@router.get("/new_song")
+async def list_songs(request: Request):
+    songs = songs_operations_db.show_all_songs()
+    return templates.TemplateResponse(request, "songs.html", {"title": "Songs", "songs": songs})
