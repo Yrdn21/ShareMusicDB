@@ -35,8 +35,14 @@
     </table>
 </div>
 {% else %}
-<div class="notification is-light">
-    Aun no hay canciones registradas. <a href="/new_song"> Agrega la primera aqui</a>
+<div class="notification is-dark">
+    <div class="icon-text">
+        <span class="icon has-text-info">
+            <i class="fas fa-info-circle"></i>
+        </span>
+        <span>Information</span>
+    </div>
+    <p class="block"> Aun no hay canciones registradas.<a href="/new_song"><strong>Agregar la primera</strong></a></p>
 </div>
 {% endif %}
 {% endblock %}
