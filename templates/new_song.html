@@ -14,11 +14,12 @@
         <div class="control">
             <div class="select is-fullwidth">
                 <select name="album_id" required>
-                    <option value="" disabled selected> Selecciona un album</option>
-                    {% for album in albums %}
-                    <option value="{{ album.album_id }}">
-                        {{ album.title }} ({{ album.artist.name if album.artist else "Sin artista" }})
-                    </option>
+                  <option value="" disabled selected>Selecciona un álbum</option>
+                  {% for album in albums %}
+                  <option value="{{ album.album_id }}">
+                    {{ album.title }} ({{ album.artist.name if album.artist else 'Sin artista' }})
+                  </option>
+                  {% endfor %}
                 </select>
             </div>
         </div>

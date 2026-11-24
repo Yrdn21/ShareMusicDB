@@ -46,7 +46,7 @@ async def list_songs(request: Request):
 
 
 
-@router.get("/new_songs")
+@router.get("/new_song")
 async def new_song_form(request: Request):
     albums = operations_db.show_all_albums_db()
     return templates.TemplateResponse(request, "new_song.html", {"title": "Nuevo Song", "albums": albums})

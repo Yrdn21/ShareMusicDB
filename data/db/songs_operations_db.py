@@ -18,13 +18,13 @@ def create_song_db(new_song: SongBase):
 
 def show_all_songs():
     with Session(engine) as session:
-        statement = select(SongID).options(selectinload(SongID.album))
+        statement = select(SongID).options(selectinload(SongID.album).selectinload(AlbumID.artist))
         return session.exec(statement).all()
 
 
 def show_one_song_db(song_id: int):
     with Session(engine) as session:
-        statement = select(SongID).where(SongID.song_id == song_id).options(selectinload(SongID.album))
+        statement = select(SongID).where(SongID.song_id == song_id).options(selectinload(SongID.album).selectinload(AlbumID.artist))
         return session.exec(statement).first()
 
 
