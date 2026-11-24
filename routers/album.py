@@ -38,8 +38,7 @@ def create_album(
     return RedirectResponse(url="/albums", status_code=status.HTTP_303_SEE_OTHER)
 
 
-@router.post("/{album_id}/buy", status_code=status.HTTP_200_OK, response_model=AlbumRead, response_description="Album purchased and status updated to out of stock",
-)
+@router.post("/{album_id}/buy", status_code=status.HTTP_303_SEE_OTHER, response_class=RedirectResponse, response_description="Album purchased and status updated to out of stock",)
 def buy_album(album_id: int):
     try:
         album = operations_db.buy_album_db(album_id)
@@ -49,7 +48,7 @@ def buy_album(album_id: int):
     if not album:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No album found")
 
-    return album
+    return RedirectResponse(url="/albums", status_code=status.HTTP_303_SEE_OTHER)
 
 
 
