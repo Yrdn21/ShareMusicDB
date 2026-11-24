@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title"> Nueva Cancion</h1>
+<form method="post" action="/songs/">
+    <div class="field">
+        <label class="label">Nombre de la cancion</label>
+        <div class="control">
+            <input name="name" class="input" type="text" placeholder="Song name here" required>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label"> Album </label>
+        <div class="control">
+            <div class="select is-fullwidth">
+                <select name="album_id" required>
+                    <option value="" disabled selected> Selecciona un album</option>
+                    {% for album in albums %}
+                    <option value="{{ album.album_id }}">
+                        {{ album.title }} ({{ album.artist.name if album.artist else "Sin artista" }})
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="field is-grouped mt-5">
+        <div class="control">
+            <button class="button is-link" type="submit"> Guardar Cancion</button>
+        </div>
+        <div class="control">
+            <a class="button is-link is light" href="/songs"> Cancelar</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
