@@ -1,16 +1,19 @@
 from sqlmodel import Session, select
 from models.songs import SongID, SongBase
+from models.album import AlbumID
 from .album import engine
 
 
 def create_song_db(new_song: SongBase):
     with Session(engine) as session:
+        album = session.get(AlbumID, new_song.album_id)
+        if not album:
+            return None
         song_db = SongID.model_validate(new_song)
         session.add(song_db)
         session.commit()
         session.refresh(song_db)
         return song_db
-
 
 def show_all_songs():
     with Session(engine) as session:
@@ -33,6 +36,10 @@ def update_song_db(song_id: int, updated_song: SongBase):
         song_db = session.get(SongID, song_id)
         if not song_db:
             return None
+        album = session.get(AlbumID, updated_song.album_id)
+        if not album:
+            return None
+
         song_db.name = updated_song.name
         song_db.album_id = updated_song.album_id
         session.add(song_db)
