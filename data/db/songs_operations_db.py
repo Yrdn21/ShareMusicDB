@@ -1,4 +1,5 @@
 from sqlmodel import Session, select
+from sqlalchemy.orm import selectinload
 from models.songs import SongID, SongBase
 from models.album import AlbumID
 from .album import engine
@@ -17,12 +18,14 @@ def create_song_db(new_song: SongBase):
 
 def show_all_songs():
     with Session(engine) as session:
-        return session.exec(select(SongID)).all()
+        statement = select(SongID).options(selectinload(SongID.album))
+        return session.exec(statement).all()
 
 
 def show_one_song_db(song_id: int):
     with Session(engine) as session:
-        return session.get(SongID, song_id)
+        statement = select(SongID).where(SongID.song_id == song_id).options(selectinload(SongID.album))
+        return session.exec(statement).first()
 
 
 def show_song_by_name_db(name: str):

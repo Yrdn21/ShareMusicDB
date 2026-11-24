@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 from templating import templates
-from data.db import artist_operations_db, operations_db
+from data.db import artist_operations_db, operations_db, songs_operations_db
 from enums.genre import Genre
 from enums.editions import Edition
 
@@ -38,3 +38,15 @@ async def new_album_form(request: Request):
             "editions": [e.value for e in Edition]
         }
     )
+
+@router.get("/songs")
+async def list_songs(request: Request):
+    songs = songs_operations_db.show_all_songs()
+    return templates.TemplateResponse(request, "songs.html", {"title": "Songs", "songs": songs})
+
+
+
+@router.post("/new_song")
+async def new_song_form(request: Request):
+    albums = operations_db.show_all_albums_db()
+    return templates.TemplateResponse(request, "new_song.html", {"title": "Nuevo Song", "albums": albums})

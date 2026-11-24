@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Form
+from fastapi.responses import RedirectResponse
 from models.songs import SongBase, SongID
 from data.db import songs_operations_db as ops
 
@@ -7,11 +8,12 @@ router = APIRouter(prefix="/songs", tags=["Songs"])
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=SongID, response_description="The song has been created")
-def create_song(song: SongBase):
-    create_song = ops.create_song_db(song)
+def create_song(name: str=Form(...), album_id: int=Form(...)):
+    new_song = SongBase(name=name, album_id=album_id)
+    create_song = ops.create_song_db(new_song)
     if not create_song:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Album not found")
-    return create_song
+    return RedirectResponse(url="/songs", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.get("/show", status_code=status.HTTP_200_OK, response_model=list[SongID], response_description="Showing all songs")
