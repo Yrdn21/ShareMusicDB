@@ -78,3 +78,11 @@ async def update_album_edition_web(album_id: int, edition: Edition = Form(...)):
     if not update:
         raise HTTPException(status_code=404, detail="Album not found")
     return RedirectResponse("/albums", status_code=303)
+
+
+@router.post("/artists/{artist_id}/toggle-status")
+def web_toggle_artist_status(artist_id: int):
+    artist = artist_operations_db.toggle_artist_status_db(artist_id)
+    if not artist:
+        raise HTTPException(status_code=404, detail="Artist not found")
+    return RedirectResponse(url="/artists", status_code=303)
