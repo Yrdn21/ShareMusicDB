@@ -12,6 +12,26 @@
 <p class="subtitle is-6">Los álbumes con stock disponible son: {{ albums|length }}</p>
 <hr>
 
+<form method="get" action="/albums" class="mb-4">
+  <div class="field has-addons">
+    <div class="control is-expanded has-icons-left">
+      <input class="input" type="text" name="q" value="{{ search_query or '' }}" placeholder="Buscar album por nombre o ID">
+      <span class="icon is-small is-left"><i class="fas fa-search"></i></span>
+    </div>
+    <div class="control">
+      <button type="submit" class="button is-info">Buscar</button>
+    </div>
+    {% if search_query %}
+    <div class="control">
+      <a href="/albums" class="button is-light">Limpiar</a>
+    </div>
+    {% endif %}
+  </div>
+</form>
+{% if not albums and search_query %}
+<div class="notification is-danger is-dark">No se encontraron albumes para <strong>{{ search_query }}</strong></div>
+{% endif %}
+
 <div class="columns is-multiline">
   {% for album in albums %}
   {% set status_val = album.status.value if album.status.value is defined else album.status %}
