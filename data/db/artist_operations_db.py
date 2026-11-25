@@ -13,10 +13,12 @@ def create_artist_db(new_artist: ArtistBase):
         session.refresh(artist_db)
         return artist_db
 
-def show_all_artist_db(include_inactive: bool = False):
+def show_all_artist_db(include_inactive: bool = False, only_inactive: bool = False):
     with Session(engine) as session:
         statement = select(ArtistID)
-        if not include_inactive:
+        if only_inactive:
+            statement = statement.where(ArtistID.status == ArtistStatus.INACTIVE)
+        elif not include_inactive:
             statement = statement.where(ArtistID.status == ArtistStatus.ACTIVE)
         return session.exec(statement).all()
 
