@@ -1,11 +1,11 @@
-from fastapi import APIRouter, status, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, status, HTTPException, UploadFile, File, Form, Query
 from fastapi.responses import RedirectResponse
 from models.album import AlbumBase, AlbumRead, AlbumEditionUpdate
 from data.db import operations_db
 from data.image_storage import save_image
 from enums.genre import Genre
 from enums.editions import Edition
-from typing import Optional
+from typing import Optional, List
 from data.db.operations_db import OutOfStockError
 
 
@@ -52,6 +52,11 @@ def buy_album(album_id: int):
 
     return RedirectResponse(url="/albums", status_code=status.HTTP_303_SEE_OTHER)
 
+
+
+@router.get("/search", response_model=List[AlbumRead])
+def search_albums_api(q: str = Query(..., min_length=1)):
+    return operations_db.search_albums_db(q)
 
 
 @router.get("/show", status_code=status.HTTP_200_OK, response_model=list[AlbumRead], response_description="Showing all albums")
