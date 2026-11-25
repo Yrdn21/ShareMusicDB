@@ -32,6 +32,27 @@ def show_artist_by_name_db(artist_name: str):
         statement = select(ArtistID).where(ArtistID.name.ilike(artist_name))
         return session.exec(statement).first()
 
+
+def search_artists_db(query: str, status_filter: str = "all"):
+    cleaned = query.strip()
+
+    with Session(engine) as session:
+        statement = select(ArtistID)
+
+        if status_filter == "inactive":
+            statement = statement.where(ArtistID.status == ArtistStatus.INACTIVE)
+        elif status_filter == "active":
+            statement = statement.where(ArtistID.status == ArtistStatus.ACTIVE)
+
+        if cleaned:
+            if cleaned.isdigit():
+                statement = statement.where(ArtistID.artist_id == int(cleaned))
+            else:
+                statement = statement.where(ArtistID.name.ilike(f"%{cleaned}%"))
+
+        return session.exec(statement).all()
+
+
 def update_artist_db(artist_id: int, update_artist: ArtistBase):
     with Session(engine) as session:
         artist_db = session.get(ArtistID, artist_id)
