@@ -15,15 +15,13 @@ async def index(request: Request):
     return templates.TemplateResponse(request, "index.html", {"albums": albums})
 
 @router.get("/artists")
-async def list_artists(request: Request, status= Query(default=("all"))):
-    if status == "inactive":
-        artists = artist_operations_db.show_all_artist_db(only_inactive=True)
-    elif status == "active":
-        artists = artist_operations_db.show_all_artist_db(include_inactive=False)
+async def list_artists(request: Request, q: Optional[str] = Query(default=None),status= Query(default=("all"))):
+    if q and q.strip():
+        artists = artist_operations_db.search_artists_db(q, status_filter=status)
     else:
-        artists = artist_operations_db.show_all_artist_db(include_inactive=True)
+        artists = artist_operations_db.search_artists_db("", status_filter=status)
 
-    return templates.TemplateResponse(request, "artists.html", {"title": "Artistas", "artists": artists, "current_status": status,})
+    return templates.TemplateResponse(request, "artists.html", {"title": "Artistas", "artists": artists, "current_status": status,"search_query": q or ""})
 
 @router.get("/new_artist")
 async def new_artist_form(request: Request):
