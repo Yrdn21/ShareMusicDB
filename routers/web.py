@@ -15,9 +15,15 @@ async def index(request: Request):
     return templates.TemplateResponse(request, "index.html", {"albums": albums})
 
 @router.get("/artists")
-async def list_artists(request: Request):
-    artists = artist_operations_db.show_all_artist_db()
-    return templates.TemplateResponse(request, "artists.html", {"title": "Artistas", "artists": artists})
+async def list_artists(request: Request, status= Query(default=("all"))):
+    if status == "inactive":
+        artists = artist_operations_db.show_all_artist_db(only_inactive=True)
+    elif status == "active":
+        artists = artist_operations_db.show_all_artist_db(include_inactive=False)
+    else:
+        artists = artist_operations_db.show_all_artist_db(include_inactive=True)
+
+    return templates.TemplateResponse(request, "artists.html", {"title": "Artistas", "artists": artists, "current_status": status,})
 
 @router.get("/new_artist")
 async def new_artist_form(request: Request):
@@ -80,7 +86,7 @@ async def update_album_edition_web(album_id: int, edition: Edition = Form(...)):
     return RedirectResponse("/albums", status_code=303)
 
 
-@router.post("/artists/{artist_id}/toggle-status")
+@router.post("/artist/{artist_id}/toggle_status")
 def web_toggle_artist_status(artist_id: int):
     artist = artist_operations_db.toggle_artist_status_db(artist_id)
     if not artist:
