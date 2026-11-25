@@ -1,19 +1,25 @@
 from sqlmodel import Session, select
 from models.artist import ArtistID, ArtistBase
 from .album import engine
+from enums.ArtistStatus import ArtistStatus
 
 
 def create_artist_db(new_artist: ArtistBase):
     with Session(engine) as session:
         artist_db = ArtistID.model_validate(new_artist)
+        artist_db.status = ArtistStatus.ACTIVE
         session.add(artist_db)
         session.commit()
         session.refresh(artist_db)
         return artist_db
 
-def show_all_artist_db():
+def show_all_artist_db(include_inactive: bool = False):
     with Session(engine) as session:
-        return session.exec(select(ArtistID)).all()
+        statement = select(ArtistID)
+        if not include_inactive:
+            statement = statement.where(ArtistID.status == ArtistStatus.ACTIVE)
+        return session.exec(statement).all()
+
 
 def show_one_artist_db(artist_id: int):
     with Session(engine) as session:
@@ -43,6 +49,20 @@ def delete_artist_db(artist_id: int):
         artist_db = session.get(ArtistID, artist_id)
         if not artist_db:
             return None
-        session.delete(artist_db)
+        artist_db.status = ArtistStatus.INACTIVE
+        session.add(artist_db)
         session.commit()
+        session.refresh(artist_db)
+        return artist_db
+
+
+def toggle_artist_status_db(artist_id: int):
+    with Session(engine) as session:
+        artist_db = session.get(ArtistID, artist_id)
+        if not artist_db:
+            return None
+        artist_db.status = (ArtistStatus.INACTIVE if artist_db.status == ArtistStatus.ACTIVE else ArtistStatus.ACTIVE)
+        session.add(artist_db)
+        session.commit()
+        session.refresh(artist_db)
         return artist_db
