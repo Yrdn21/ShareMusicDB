@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Request, HTTPException, Form
+from fastapi import APIRouter, Request, HTTPException, Form, Query
 from fastapi.responses import RedirectResponse
-
-from enums import editions
+from typing import Optional
 from templating import templates
 from data.db import artist_operations_db, operations_db, songs_operations_db
 from enums.genre import Genre
@@ -25,9 +24,13 @@ async def new_artist_form(request: Request):
     return templates.TemplateResponse(request, "new_artist.html", {"title": "Nuevo Artista"})
 
 @router.get("/albums")
-async def list_albums(request: Request):
-    albums = operations_db.show_all_albums_db()
-    return templates.TemplateResponse(request, "albums.html", {"title": "Albumes", "albums": albums, "editions": [e.value for e in Edition]})
+async def list_albums(request: Request, q: Optional[str] = Query(default=(None))):
+    if q and q.strip():
+        albums = operations_db.search_albums_db(q)
+    else:
+        albums = operations_db.show_all_albums_db()
+
+    return templates.TemplateResponse(request, "albums.html", {"title": "Albumes", "albums": albums, "editions": [e.value for e in Edition], "search_query": q or ""})
 
 @router.get("/history")
 async def album_history(request: Request):
