@@ -9,9 +9,13 @@
     <a href="/new_artist" class="button is-primary">+ Nuevo Artista</a>
   </div>
 </div>
-<p class="subtitle is-6">Los artistas que tenemos en la DB son: {{ artists|length }}</p>
+<p class="subtitle is-6">Los artistas que tenemos son: {{ artists|length }}</p>
 <hr>
-
+<div class="buttons mb-4">
+  <a href="/artists?status=all" class="button is-small {% if current_status == 'all' %}is-link{% else %}is-light{% endif %}">Todos</a>
+  <a href="/artists?status=active" class="button is-small {% if current_status == 'active' %}is-success{% else %}is-light{% endif %}">Activos</a>
+  <a href="/artists?status=inactive" class="button is-small {% if current_status == 'inactive' %}is-danger{% else %}is-light{% endif %}">Inactivos</a>
+</div>
 <div class="columns is-multiline">
   {% for artist in artists %}
   {% set status_val = artist.status.value if artist.status.value is defined else artist.status %}
