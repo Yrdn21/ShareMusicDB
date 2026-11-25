@@ -80,6 +80,21 @@ def show_one_album_db(album_id: int):
         return session.exec(statement).first()
 
 
+def search_albums_db(query: str):
+    cleaned = query.strip()
+    if not cleaned:
+        return show_all_albums_db()
+
+    with Session(engine) as session:
+        if cleaned.isdigit():
+            statement = (select(AlbumID).where(AlbumID.album_id == int(cleaned)).options(selectinload(AlbumID.artist),selectinload(AlbumID.songs)))
+            album = session.exec(statement).first()
+            return [album] if album else []
+
+        statement = (select(AlbumID).where(AlbumID.title.ilike(f"%{cleaned}%")).options(selectinload(AlbumID.artist),selectinload(AlbumID.songs)))
+        return session.exec(statement).all()
+
+
 def show_one_album_by_name_db(album_name: str):
     with Session(engine) as session:
         statement = (
