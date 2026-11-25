@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException, Form
+from fastapi.responses import RedirectResponse
 from templating import templates
 from data.db import artist_operations_db, operations_db, songs_operations_db
 from enums.genre import Genre
 from enums.editions import Edition
+from models.album import AlbumEditionUpdate
 
 router = APIRouter(include_in_schema=False)
 
@@ -55,3 +57,13 @@ async def list_songs(request: Request):
 async def new_song_form(request: Request):
     albums = operations_db.show_all_albums_db()
     return templates.TemplateResponse(request, "new_song.html", {"title": "Nuevo Song", "albums": albums})
+
+
+@router.get("/albums/{album_id}/songs")
+async def album_songs_view(request: Request, album_id: int):
+    album = operations_db.show_one_album_db(album_id)
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+    return templates.TemplateResponse(request, "album_songs.html", {"title": f"Canciones de {album.title}", "album": album, "songs": album.songs})
+
+

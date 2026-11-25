@@ -50,6 +50,22 @@
             Sin stock
           </button>
         {% endif %}
+
+        <div class="columns is-mobile is-variable is-1 mt-2 mb-0">
+          <div class="columns is-half">
+            <a href="/albums/{{ album.album_id }}/edit_edition" class="button is-warning is-light is-small is-fullwidth">
+              <span class="icon is-small"><i class="fas fa-edit"></i></span>
+              <span>Edicion</span>
+            </a>
+          </div>
+          <div class="columns is-half">
+            <a href="/albums/{{ album.album_id }}/songs" class="button is-info is-light is-small is-fullwidth">
+              <span class="icon is-small"><i class="fas fa-music"></i></span>
+              <span>Canciones ({{ album.songs|length }}</span>
+            </a>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

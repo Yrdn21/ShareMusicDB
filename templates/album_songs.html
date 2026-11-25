@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="level">
+    <div class="level-left">
+        <div>
+            <h1 class="title">{{ album.title }}</h1>
+            <p class="subtitle is-5">
+                Artista: <strong>{{ album.artist.name if album.artist else 'Desconocido' }}</strong>
+                Edicion: <span class="tag is-dark">{{ album.edition.value if album.edition.value is defined else album.edition }}</span>
+            </p>
+        </div>
+    </div>
+    <div class="level-right">
+        <div class="buttons">
+            <a href="/new_song" class="button is-primary">
+                <span class="icon"><i class="fas fa-plus"></i></span>
+                <span>Nueva Cancion</span>
+            </a>
+            <a href="/albums" class="button is-link is-light">
+                <span class="icon"><i class="fa fa-arrow-left"></i></span>
+                <span>Volver a albumes</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if songs %}
+<div class="box">
+    <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+            <tr>
+                <th>Track</th>
+                <th>Nombre de la Cancion</th>
+                <th>Album</th>
+                <th>Artista</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for song in songs %}
+        <tr>
+            <td><strong>{{ song.album_track_id if song.album_track_id is defined else (album.album_id ~ '-' ~ loop.index) }}</strong></td>
+        <td>{{ song.name }}</td>
+        <td>{{ album.title }}</td>
+        <td>{{ album.artist.name if album.artist else 'Desconocido' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="notification is-warning is-light">
+  Este álbum aún no tiene canciones registradas. <a href="/new_song"><strong>Agrega la primera aquí</strong></a>.
+</div>
+{% endif %}
+{% endblock %}
