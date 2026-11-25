@@ -1,5 +1,6 @@
 from typing import Optional, List, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
+from enums.ArtistStatus import ArtistStatus
 
 
 if TYPE_CHECKING:
@@ -10,6 +11,7 @@ class ArtistBase(SQLModel):
     name: str
     country: str = "Desconocido"
     image_url: Optional[str] = None
+    status: ArtistStatus = ArtistStatus.ACTIVE
 
 
 class ArtistID(ArtistBase, table=True):
