@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <div>
+        <h1 class="title">Albumes sin stock</h1>
+
+    </div>
+    <div class="level-right">
+        <a href="/albums" class="button is-link is-light">
+            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+            <span>Volver</span>
+        </a>
+    </div>
+</div>
+
+<p class="subtitle is-6">Los albumes sin stock son: {{ albums|length }}</p>
+
+{% if albums %}
+<div class="columns is-multiline">
+    {% for album in albums %}
+    {% set status_val = album.status.value if album.status.value is defined else album.status %}
+    <div class="column is-3">
+        <div class="card">
+            <div class="card-image">
+                <figure class="image is-1by1">
+                    <img src="{{ album.image_url or 'https://bulma.io/assets/images/placeholders/480x480.png' }}" alt="{{ album.title }}" style="object-fit: cover; filter: grayscale(60%);">
+                </figure>
+            </div>
+            <div class="card-content">
+                <p class="title is-5">{{ album.title }}</p>
+                <p class="subtitle is-6">{{ album.artist.name if album.artist else 'Sin artista' }}({{ album.release_year }})</p>
+
+                <p class="has-text-weight-bold is-size-5 mb-2">${{ album.price }}</p>
+
+                <div class="tags mb-3">
+                    <span class="tag is-info is-light">{{ album.genre.value if album.genre.value is defined else album.genre }}</span>
+                    <span class="tag is-dark">{{ album.edition.value if album.edition.value is defined else album.edition }}</span>
+                    <span class="tag is-danger">{{ status_val }}</span>
+                </div>
+
+                <button type="button" class="button is-danger is-fullwidth" disabled>
+                    Sin Stock
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="notification is-info is-light">
+    No hay albumes agotados en el historial
+</div>
+{% endif %}
+{% endblock %}
