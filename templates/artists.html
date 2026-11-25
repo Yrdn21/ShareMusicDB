@@ -9,13 +9,43 @@
     <a href="/new_artist" class="button is-primary">+ Nuevo Artista</a>
   </div>
 </div>
+
+<form method="get" action="/artists" class="mb-3">
+  <input type="hidden" name="status" value="{{ current_status or 'all' }}">
+  <div class="field has-addons">
+    <div class="control is-expanded has-icons-left">
+      <input class="input" type="text" name="q" value="{{ search_query or '' }}" placeholder="Buscar artista por nombre o ID...">
+      <span class="icon is-small is-left"><i class="fas fa-search"></i></span>
+    </div>
+    <div class="control">
+      <button type="submit" class="button is-info">Buscar</button>
+    </div>
+    {% if search_query %}
+    <div class="control">
+      <a href="/artists?status={{ current_status or 'all' }}" class="button is-light">Limpiar</a>
+    </div>
+    {% endif %}
+  </div>
+</form>
+
+<div class="buttons mb-4">
+  <a href="/artists?status=all{% if search_query %}&q={{ search_query }}{% endif %}"
+     class="button is-small {% if current_status == 'all' %}is-link{% else %}is-light{% endif %}">Todos</a>
+  <a href="/artists?status=active{% if search_query %}&q={{ search_query }}{% endif %}"
+     class="button is-small {% if current_status == 'active' %}is-success{% else %}is-light{% endif %}">Activos</a>
+  <a href="/artists?status=inactive{% if search_query %}&q={{ search_query }}{% endif %}"
+     class="button is-small {% if current_status == 'inactive' %}is-danger{% else %}is-light{% endif %}">Inactivos</a>
+</div>
+
 <p class="subtitle is-6">Los artistas que tenemos son: {{ artists|length }}</p>
 <hr>
-<div class="buttons mb-4">
-  <a href="/artists?status=all" class="button is-small {% if current_status == 'all' %}is-link{% else %}is-light{% endif %}">Todos</a>
-  <a href="/artists?status=active" class="button is-small {% if current_status == 'active' %}is-success{% else %}is-light{% endif %}">Activos</a>
-  <a href="/artists?status=inactive" class="button is-small {% if current_status == 'inactive' %}is-danger{% else %}is-light{% endif %}">Inactivos</a>
+
+{% if not artists and search_query %}
+<div class="notification is-warning is-light">
+  No se encontraron artistas para "<strong>{{ search_query }}</strong>".
 </div>
+{% endif %}
+
 <div class="columns is-multiline">
   {% for artist in artists %}
   {% set status_val = artist.status.value if artist.status.value is defined else artist.status %}
