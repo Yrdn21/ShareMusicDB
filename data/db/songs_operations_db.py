@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 from sqlalchemy.orm import selectinload
 from models.songs import SongID, SongBase
 from models.album import AlbumID
@@ -10,7 +10,11 @@ def create_song_db(new_song: SongBase):
         album = session.get(AlbumID, new_song.album_id)
         if not album:
             return None
-        song_db = SongID.model_validate(new_song)
+
+        statement = select(func.max(SongID.track_number)).where(SongID.album_id == new_song.album_id)
+        max_track= session.exec(statement).first() or 0
+
+        song_db = SongID(name=new_song.name, album_id=new_song.album_id, track_number= max_track + 1)
         session.add(song_db)
         session.commit()
         session.refresh(song_db)

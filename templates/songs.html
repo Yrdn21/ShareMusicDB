@@ -25,7 +25,7 @@
         <tbody>
         {% for song in songs %}
         <tr>
-            <td>{{ loop.index }}</td>
+            <td><strong>{{ song.album_track_id }}</strong></td>
             <td><strong>{{ song.name }}</strong></td>
             <td>{{ song.album.title if song.album else "Sin album" }}</td>
             <td>{{ song.album.artist.name if song.album and song.album.artist else "Desconocido" }}</td>
