@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, Form, Query
+from fastapi import APIRouter, Request, HTTPException, Form, Query, File, UploadFile
 from fastapi.responses import RedirectResponse
 from typing import Optional
 from templating import templates
@@ -6,6 +6,7 @@ from data.db import artist_operations_db, operations_db, songs_operations_db
 from enums.genre import Genre
 from enums.editions import Edition
 from models.album import AlbumEditionUpdate
+from data.image_storage import save_image
 
 router = APIRouter(include_in_schema=False)
 
@@ -89,4 +90,22 @@ def web_toggle_artist_status(artist_id: int):
     artist = artist_operations_db.toggle_artist_status_db(artist_id)
     if not artist:
         raise HTTPException(status_code=404, detail="Artist not found")
+    return RedirectResponse(url="/artists", status_code=303)
+
+
+@router.post("/artist/{artist_id}/update_image")
+def web_update_artist_image(artist_id: int, image:UploadFile = File(...) ):
+    artist = artist_operations_db.show_one_artist_db(artist_id)
+    if not artist:
+        raise HTTPException(status_code=404, detail="Artist not found")
+
+    if not image.filename:
+        raise HTTPException(status_code=400, detail="Image not provided")
+
+    image_url = save_image(image, "artists")
+    updated = artist_operations_db.update_artist_image_db(artist_id, image_url)
+
+    if not updated:
+        raise HTTPException(status_code=404, detail="Artist not found")
+
     return RedirectResponse(url="/artists", status_code=303)
