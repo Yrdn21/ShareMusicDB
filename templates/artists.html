@@ -81,6 +81,25 @@
           </button>
         {% endif %}
         </form>
+        <hr>
+
+        <form method="post" action="/artist/{{ artist.artist_id }}/update_image" enctype="multipart/form-data">
+          <div class="is-flex is-justify-content-space-between is-align-items-center" style="gap: 0.4rem;">
+            <div class="file is-small is-info is-outlined is-centered mb-1">
+              <label class="file-label">
+                <input class="file-input" type="file" name="image" accept="image/*" required onchange="const label = this.closest('.file').querySelector('.file-name'); if (label && this.files[0]) label.textContent = this.files[0].name">
+                <span class="file-cta">
+                  <span class="file-icon"><i class="fas fa-camera"></i></span>
+                  <span class="file-label">Elegir Foto</span>
+                </span>
+              </label>
+            </div>
+            <button type="submit" class="button is-info is-outlined is-small is-fullwidth">
+              <span class="icon"><i class="fas fa-upload"></i></span>
+              <span>Cambiar foto</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
