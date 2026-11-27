@@ -109,3 +109,13 @@ def web_update_artist_image(artist_id: int, image:UploadFile = File(...) ):
         raise HTTPException(status_code=404, detail="Artist not found")
 
     return RedirectResponse(url="/artists", status_code=303)
+
+
+@router.post("/song/{song_id}/toggle_status")
+def web_toggle_song_status(song_id: int, reditect_to: Optional[str] = Form(default=None)):
+    song = songs_operations_db.toggle_song_status_db(song_id)
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+
+    target = reditect_to if reditect_to and reditect_to.startswith("/") else "/songs"
+    return RedirectResponse(url=target, status_code=303)
