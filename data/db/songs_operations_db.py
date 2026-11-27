@@ -1,5 +1,7 @@
 from sqlmodel import Session, select, func
 from sqlalchemy.orm import selectinload
+
+from enums.SongStatus import SongStatus
 from models.songs import SongID, SongBase
 from models.album import AlbumID
 from .album import engine
@@ -62,4 +64,18 @@ def delete_song_db(song_id: int):
             return None
         session.delete(song_db)
         session.commit()
+        return song_db
+
+
+
+def toggle_song_status_db(song_id: int):
+    with Session(engine) as session:
+        song_db = session.get(SongID, song_id)
+        if not song_db:
+            return None
+
+        song_db.status = (SongStatus.INACTIVE if song_db.status == SongStatus.ACTIVE else SongStatus.ACTIVE)
+        session.add(song_db)
+        session.commit()
+        session.refresh(song_db)
         return song_db
