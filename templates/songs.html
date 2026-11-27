@@ -20,15 +20,34 @@
                 <th>Cancion</th>
                 <th>Album</th>
                 <th>Artista</th>
+                <th class="has-text-right">Acciones</th>
             </tr>
         </thead>
         <tbody>
         {% for song in songs %}
-        <tr>
-            <td><strong>{{ song.album_track_id }}</strong></td>
-            <td><strong>{{ song.name }}</strong></td>
+        {% set status_val = song.status.value if song.status is defined and song.status.value is defined else (song.status if song.status is defined else 'Disponible') %}
+        {% set is_inactive = status_val in ['Oculta', 'No disponible', 'INACTIVE', 'UNAVAILABLE'] %}
+        <tr style="{% if is_inactive %}opacity: 0.65;{% endif %}">
+            <td><strong>{{ song.album_track_id if song.album_track_id is defined else (song.album_id ~ '-' ~ loop.index) }}</strong></td>
+            <td style="{% if is_inactive %}text-decoration: line-trought;{% endif %}">
+                <strong>{{ song.name }}</strong>
+            </td>
             <td>{{ song.album.title if song.album else "Sin album" }}</td>
             <td>{{ song.album.artist.name if song.album and song.album.artist else "Desconocido" }}</td>
+            <td class="has-text-right">
+                <form method="post" action="/song/{{ song.song_id }}/toggle_status" style="display: inline;">
+                    <input type="hidden" name="redirect_to" value="/songs">
+                    {% if not is_inactive %}
+                        <button type="submit" class="button is-small is-warning is-light" title="Ocultar Cancion">
+                            <span class="icon is-small"><i class="fas fa-eye"></i></span>
+                        </button>
+                    {% else %}
+                        <button type="submit" class="button is-small is-success is-light" title="Mostrar Cancion">
+                            <span class="icon is-small"><i class="fas fa-eye-slash"></i></span>
+                        </button>
+                    {% endif %}
+                </form>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
