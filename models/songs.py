@@ -1,5 +1,6 @@
 from typing import Optional, TYPE_CHECKING
 from sqlmodel import SQLModel, Field, Relationship
+from enums.SongStatus import SongStatus
 
 
 
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
 class SongBase(SQLModel):
     name: str
     album_id: int
+    status: SongStatus = SongStatus.ACTIVE
 
 
 class SongID(SongBase, table=True):
