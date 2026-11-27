@@ -2,6 +2,7 @@ from sqlmodel import Session, select
 from models.artist import ArtistID, ArtistBase
 from .album import engine
 from enums.ArtistStatus import ArtistStatus
+from data.image_storage import delete_image
 
 
 def create_artist_db(new_artist: ArtistBase):
@@ -88,4 +89,21 @@ def toggle_artist_status_db(artist_id: int):
         session.add(artist_db)
         session.commit()
         session.refresh(artist_db)
+        return artist_db
+
+def update_artist_image_db(artist_id: int, new_image_url: str):
+    with Session(engine) as session:
+        artist_db = session.get(ArtistID, artist_id)
+        if not artist_db:
+            return None
+
+        old_image = artist_db.image_url
+        artist_db.image_url = new_image_url
+        session.add(artist_db)
+        session.commit()
+        session.refresh(artist_db)
+
+        if old_image and old_image != new_image_url:
+            delete_image(old_image)
+
         return artist_db
