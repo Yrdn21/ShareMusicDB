@@ -29,26 +29,50 @@
         {% set is_inactive = status_val in ['Oculta', 'No disponible', 'INACTIVE', 'UNAVAILABLE'] %}
         <tr style="{% if is_inactive %}opacity: 0.65;{% endif %}">
             <td><strong>{{ song.album_track_id if song.album_track_id is defined else (song.album_id ~ '-' ~ loop.index) }}</strong></td>
-            <td style="{% if is_inactive %}text-decoration: line-trought;{% endif %}">
+            <td style="{% if is_inactive %}text-decoration: line-through;{% endif %}">
                 <strong>{{ song.name }}</strong>
             </td>
             <td>{{ song.album.title if song.album else "Sin album" }}</td>
             <td>{{ song.album.artist.name if song.album and song.album.artist else "Desconocido" }}</td>
+
+
             <td class="has-text-right">
-                <form method="post" action="/song/{{ song.song_id }}/toggle_status" style="display: inline;">
-                    <input type="hidden" name="redirect_to" value="/songs">
-                    {% if not is_inactive %}
-                        <button type="submit" class="button is-small is-warning is-light" title="Ocultar Cancion">
-                            <span class="icon is-small"><i class="fas fa-eye"></i></span>
-                        </button>
-                    {% else %}
-                        <button type="submit" class="button is-small is-success is-light" title="Mostrar Cancion">
-                            <span class="icon is-small"><i class="fas fa-eye-slash"></i></span>
-                        </button>
-                    {% endif %}
+                <div class="is-inline-flex is-align-items-center" style="gap: 0.35rem;">
+                    <button type="button" class="button is-small is-info is-light" title="Cambiar nombre" onclick="const box = document.getElementById('rename-box-{{ song.song_id }}'); box.classList.toggle('is-hidden'); const inp = box.querySelector('input[name=name]'); if (inp && !box.classList.contains('is-hidden')) inp.focus();">
+                        <span class="icon is-small"><i class="fas fa-pen"></i></span>
+                        <span>Editar</span>
+                    </button>
+
+                    <form method="post" action="/song/{{ song.song_id }}/toggle_status" style="display: inline;">
+                        <input type="hidden" name="redirect_to" value="/songs">
+                        {% if not is_inactive %}
+                            <button type="submit" class="button is-small is-warning is-light" title="Ocultar Cancion">
+                                <span class="icon is-small"><i class="fas fa-eye"></i></span>
+                            </button>
+                        {% else %}
+                            <button type="submit" class="button is-small is-success is-light" title="Mostrar Cancion">
+                                <span class="icon is-small"><i class="fas fa-eye-slash"></i></span>
+                            </button>
+                        {% endif %}
+                    </form>
+                </div>
+
+                <form id="rename-box-{{ song.song_id }}" method="post" action="/song/{{ song.song_id }}/rename" class="is-hidden mt-2" >
+                    <div class="field has-addons is-justify-content-end mb-0">
+                        <div class="control">
+                            <input class="input is-small" type="text" name="name" value="{{ song.name }}" required placeholder="Nuevo nombre">
+                        </div>
+                        <div class="control">
+                            <button type="submit" class="button is-small is-primary" title="Guardar nombre">
+                                <span class="icon is-small"><i class="fas fa-check"></i></span>
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </td>
         </tr>
+
+
         {% endfor %}
         </tbody>
     </table>
