@@ -30,7 +30,7 @@ def show_all_songs():
 
 def show_one_song_db(song_id: int):
     with Session(engine) as session:
-        statement = select(SongID).where(SongID.song_id == song_id).options(selectinload(SongID.album).selectinload(AlbumID.artist))
+        statement = select(SongID).where(SongID.song_id == song_id).o-ptions(selectinload(SongID.album).selectinload(AlbumID.artist))
         return session.exec(statement).first()
 
 
@@ -40,21 +40,20 @@ def show_song_by_name_db(name: str):
         return session.exec(statement).first()
 
 
-def update_song_db(song_id: int, updated_song: SongBase):
+def update_song_db(song_id: int, new_name: str):
+    cleaned = new_name.strip()
+    if not cleaned:
+        return None
     with Session(engine) as session:
         song_db = session.get(SongID, song_id)
         if not song_db:
             return None
-        album = session.get(AlbumID, updated_song.album_id)
-        if not album:
-            return None
-
-        song_db.name = updated_song.name
-        song_db.album_id = updated_song.album_id
+        song_db.name = cleaned
         session.add(song_db)
         session.commit()
         session.refresh(song_db)
         return song_db
+
 
 
 def delete_song_db(song_id: int):
